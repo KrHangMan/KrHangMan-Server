@@ -15,7 +15,7 @@
 | HTTP Method | URI | Operation |
 | --- | --- | --- |
 | POST | /api/users | creates a new user : user select nickname|
-| PATCH | /api/users/:username/correct-cnt | updates user "correct_cnt" |
+| PATCH | /api/users/:username | updates user "correct_cnt" |
 | GET | /api/users/rank| spread rank up to 10 in users |
 
 ### WORD 
