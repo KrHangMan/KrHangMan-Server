@@ -18,5 +18,5 @@
 | GET | /api/rank| spread rank up to 10 in users |
 | GET | /api/word | spread words 10 problem to user |
 
-## ERD 설계 
-<a href="#">ERD</a>
+## <a href="#">ERD 설계</a>
+
