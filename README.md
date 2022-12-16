@@ -11,12 +11,17 @@
 
 ## <a href="https://app.swaggerhub.com/apis/OPOP0421/KrHangMan/1.0.0#/Selection%20nickname/selectnickname">API 설계</a>
 
+### USERS
 | HTTP Method | URI | Operation |
 | --- | --- | --- |
 | POST | /api/users | creates a new user : user select nickname|
-| PUT | /api/users/:username/correct_cnt | updates user "correct_cnt" |
-| GET | /api/rank| spread rank up to 10 in users |
-| GET | /api/word | spread 10 words to user |
+| PATCH | /api/users/:username/correct-cnt | updates user "correct_cnt" |
+| GET | /api/users/rank| spread rank up to 10 in users |
+
+### WORD 
+| HTTP Method | URI | Operation |
+| --- | --- | --- |
+| GET | /api/word | spread 10 words |
 
 ## <a href="#">ERD 설계</a>
 
