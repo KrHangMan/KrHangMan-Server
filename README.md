@@ -24,4 +24,4 @@
 | GET | /api/words | spread 10 words |
 
 ## <a href="#">ERD 설계</a>
- 
+
