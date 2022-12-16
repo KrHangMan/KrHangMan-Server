@@ -9,8 +9,7 @@
 | 버전 관리 | Github, Git |
 | 배포 및 운영 | AWS EC2, AWS RDS, Docker, Github Actions  |
 
-## API 설계 
-<a href="https://app.swaggerhub.com/apis/OPOP0421/KrHangMan/1.0.0#/Selection%20nickname/selectnickname">Swagger</a>
+## <a href="https://app.swaggerhub.com/apis/OPOP0421/KrHangMan/1.0.0#/Selection%20nickname/selectnickname">API 설계</a>
 
 | HTTP Method | URI | Operation |
 | --- | --- | --- |
