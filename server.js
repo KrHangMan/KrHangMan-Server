@@ -14,10 +14,10 @@ app.listen(process.env.PORT , () => {
     console.log('listening on ', process.env.DEV_PORT);
     
     //연결 테스트 
-    var connection = mysql.createConnection(conn.local); // DB 커넥션 생성
+    var connection = mysql.createConnection(conn.real); // DB 커넥션 생성
     connection.connect();   // DB 접속
     
-    testQuery = "SELECT COUNT(*) AS CNT FROM WORDS";
+    testQuery = "SELECT * FROM WORDS";
     connection.query(testQuery, function (err, results, fields) { // testQuery 실행
         if (err) {
             console.log(err);
