@@ -1,15 +1,25 @@
 const express = require('express');
 const app = express();
-require('dotenv').config();
-
+const dotenv = require('dotenv');
+dotenv.config();
 const bodyParser = require('body-parser');
-const request = require('request');
-app.use(bodyParser.urlencoded({extended : true}));
+const morgan = require('morgan');
 const Hangul = require('hangul-js');    // 한글 자모자 분리 library
-
-const mysql = require('mysql');
+const mysql = require('mysql2');
 const conn = require('./config/db.js');
+const user = require('./routes/user');
+app.set('port', process.env.DEV_PORT || 3000);
+app.use(bodyParser.urlencoded({extended : true}));
+app.use(morgan('combined'));
 
+app.use('/',user);
+
+
+app.use((req, res, next) => {
+    const error =  new Error(`${req.method} ${req.url} 라우터가 없습니다.`);
+    error.status = 404;
+    next(error);
+  });
 app.listen(process.env.PORT , () => {  
     console.log('listening on ', process.env.DEV_PORT);
     
@@ -26,6 +36,9 @@ app.listen(process.env.PORT , () => {
     });
     connection.end(); // DB 접속 종료
 });
+
+
+
 
 
 
