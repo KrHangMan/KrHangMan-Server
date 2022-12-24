@@ -7,20 +7,20 @@ const morgan = require('morgan');
 const Hangul = require('hangul-js');    // 한글 자모자 분리 library
 const mysql = require('mysql2');
 const conn = require('./config/db.js');
-const user = require('./routes/user');
+const users = require('./routes/user');
+const words = require('./routes/word');
 app.set('port', process.env.DEV_PORT || 3000);
 app.use(bodyParser.urlencoded({extended : true}));
 app.use(morgan('combined'));
 
-app.use('/',user);
-
-
+app.use('/users',users);
+app.use('/words',words);
 app.use((req, res, next) => {
     const error =  new Error(`${req.method} ${req.url} 라우터가 없습니다.`);
     error.status = 404;
     next(error);
   });
-app.listen(process.env.PORT , () => {  
+app.listen(process.env.DEV_PORT , () => {  
     console.log('listening on ', process.env.DEV_PORT);
     
     //연결 테스트 
@@ -32,7 +32,7 @@ app.listen(process.env.PORT , () => {
         if (err) {
             console.log(err);
         }
-        console.log(results);
+       
     });
     connection.end(); // DB 접속 종료
 });
