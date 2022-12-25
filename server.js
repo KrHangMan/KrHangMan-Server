@@ -10,16 +10,18 @@ const conn = require('./config/db.js');
 const users = require('./routes/user');
 const words = require('./routes/word');
 app.set('port', process.env.DEV_PORT || 3000);
+app.use(express.json());
 app.use(bodyParser.urlencoded({extended : true}));
 app.use(morgan('combined'));
 
-app.use('/users',users);
-app.use('/words',words);
+app.use('/api/users',users);
+app.use('/api/words',words);
 app.use((req, res, next) => {
     const error =  new Error(`${req.method} ${req.url} 라우터가 없습니다.`);
     error.status = 404;
     next(error);
   });
+
 app.listen(process.env.DEV_PORT , () => {  
     console.log('listening on ', process.env.DEV_PORT);
     
@@ -27,12 +29,12 @@ app.listen(process.env.DEV_PORT , () => {
     var connection = mysql.createConnection(conn.real); // DB 커넥션 생성
     connection.connect();   // DB 접속
     
-    testQuery = "SELECT * FROM WORDS";
+    testQuery = "SELECT COUNT(*) AS 단어갯수 FROM WORDS";
     connection.query(testQuery, function (err, results, fields) { // testQuery 실행
+        console.log(JSON.stringify(results));
         if (err) {
             console.log(err);
         }
-       
     });
     connection.end(); // DB 접속 종료
 });

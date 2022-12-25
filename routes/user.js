@@ -4,12 +4,13 @@ const conn = require('../config/db.js');
 const mysql = require('mysql2');
 //const { connectDB } = require("./middleware-db");
 
+/** create a new user  */
 router.post('/', async (req, res, next) => {            
     try {           
         var connection = mysql.createConnection(conn.real); // DB 커넥션 생성
         connection.connect();
         const get_user = req.body.username;
-        const new_user = `insert into USERS(username,correct_cnt) values ('${String(get_user)}', 0); `
+        const new_user = `insert into USERS(username, correct_cnt) values ('${String(get_user)}', 0); `
         connection.query(new_user, function (err,  fields) { 
             if (err) {
                 console.log(err);
@@ -26,9 +27,51 @@ router.post('/', async (req, res, next) => {
         "message": "server error"
         });
     }
-    });
+});
 
+/** update user "correct_cnt" */
+router.patch('/:username', async (req, res, next) => {            
+    try {           
+        var connection = mysql.createConnection(conn.real); // DB 커넥션 생성
+        connection.connect();
 
+        const username      = req.params.username;
+        const correct_cnt   = req.body.correct_cnt;
+
+        console.log("username : ", username , " | correct_cnt : " , correct_cnt);
+
+        var query =  `UPDATE USERS 
+                            SET CORRECT_CNT = '${parseInt(correct_cnt)}' + 
+                            (SELECT CORRECT_CNT 
+                            FROM (
+                                    SELECT CORRECT_CNT 
+                                    FROM USERS 
+                                    WHERE USERNAME = '${String(username)}'
+                                ) TMP
+                            ) 
+                      WHERE USERNAME = '${String(username)}';`;
+        
+        console.log("query : ", query);
+
+        connection.query(query, function (err,  fields) { 
+            if (err) {
+                console.log(err);
+            } 
+        });
+        return res.status(200).json({
+            "code": 200,
+            "message": "ok"
+        });  
+    } catch (error) {
+        console.error(error);  
+        res.status(500).json({
+            "code":500,
+            "message": "server error"
+        });
+    }
+});
+
+/** update user "correct_cnt" */
 router.get('/rank', async (req, res, next) => {            
     try {           
         var connection = mysql.createConnection(conn.real); // DB 커넥션 생성
@@ -60,7 +103,7 @@ router.get('/rank', async (req, res, next) => {
         "message": "server error"
         });
     }
-    });
+});
 
 
 
