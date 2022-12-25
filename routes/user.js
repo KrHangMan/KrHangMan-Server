@@ -30,25 +30,30 @@ router.post('/', async (req, res, next) => {
 });
 
 /** update user "correct_cnt" */
-router.patch('/api/users/:username', async (req, res, next) => {            
+router.patch('/:username', async (req, res, next) => {            
     try {           
         var connection = mysql.createConnection(conn.real); // DB 커넥션 생성
         connection.connect();
 
         const username      = req.params.username;
-        const correct_cnt   = parseInt(req.body.correcnt_cnt);
+        const correct_cnt   = req.body.correct_cnt;
 
-        var query =  `UPDATE USERS SET CORRECT_CNT = '${(correct_cnt)}' + 
-                        (SELECT CORRECT_CNT 
-                         FROM (
-                                SELECT CORRECT_CNT 
-                                FROM USERS 
-                                WHERE USERNAME = '${String(username)}'
-                            ) TMP
-                         ) 
-                      WHERE USERNAME = '${String(username)}';`
+        console.log("username : ", username , " | correct_cnt : " , correct_cnt);
+
+        var query =  `UPDATE USERS 
+                            SET CORRECT_CNT = '${parseInt(correct_cnt)}' + 
+                            (SELECT CORRECT_CNT 
+                            FROM (
+                                    SELECT CORRECT_CNT 
+                                    FROM USERS 
+                                    WHERE USERNAME = '${String(username)}'
+                                ) TMP
+                            ) 
+                      WHERE USERNAME = '${String(username)}';`;
         
-        connection.query(new_user, function (err,  fields) { 
+        console.log("query : ", query);
+
+        connection.query(query, function (err,  fields) { 
             if (err) {
                 console.log(err);
             } 
