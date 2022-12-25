@@ -20,6 +20,7 @@ app.use((req, res, next) => {
     error.status = 404;
     next(error);
   });
+
 app.listen(process.env.DEV_PORT , () => {  
     console.log('listening on ', process.env.DEV_PORT);
     
@@ -27,12 +28,12 @@ app.listen(process.env.DEV_PORT , () => {
     var connection = mysql.createConnection(conn.real); // DB 커넥션 생성
     connection.connect();   // DB 접속
     
-    testQuery = "SELECT * FROM WORDS";
+    testQuery = "SELECT COUNT(*) AS 단어갯수 FROM WORDS";
     connection.query(testQuery, function (err, results, fields) { // testQuery 실행
+        console.log(JSON.stringify(results));
         if (err) {
             console.log(err);
         }
-       
     });
     connection.end(); // DB 접속 종료
 });
