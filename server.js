@@ -14,8 +14,8 @@ app.use(express.json());
 app.use(bodyParser.urlencoded({extended : true}));
 app.use(morgan('combined'));
 
-app.use('/api/users',users);
-app.use('/api/words',words);
+app.use('/api/users', users);
+app.use('/api/words', words);
 app.use((req, res, next) => {
     const error =  new Error(`${req.method} ${req.url} 라우터가 없습니다.`);
     error.status = 404;

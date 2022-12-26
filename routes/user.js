@@ -32,15 +32,12 @@ router.post('/', async (req, res, next) => {
 /** update user "correct_cnt" */
 router.patch('/:username', async (req, res, next) => {            
     try {           
-        var connection = mysql.createConnection(conn.real); // DB 커넥션 생성
-        connection.connect();
+        var connection = await mysql.createConnection(conn.real); // DB 커넥션 생성
+        await connection.connect();   // DB 접속
 
         const username      = req.params.username;
         const correct_cnt   = req.body.correct_cnt;
-
-        console.log("username : ", username , " | correct_cnt : " , correct_cnt);
-
-        var query =  `UPDATE USERS 
+        const query =  `UPDATE USERS 
                             SET CORRECT_CNT = '${parseInt(correct_cnt)}' + 
                             (SELECT CORRECT_CNT 
                             FROM (
@@ -49,19 +46,18 @@ router.patch('/:username', async (req, res, next) => {
                                     WHERE USERNAME = '${String(username)}'
                                 ) TMP
                             ) 
-                      WHERE USERNAME = '${String(username)}';`;
+                        WHERE USERNAME = '${String(username)}';`;
         
         console.log("query : ", query);
 
-        connection.query(query, function (err,  fields) { 
-            if (err) {
-                console.log(err);
-            } 
-        });
+        const res_data =  await connection.query(query);
+        console.log("res_data : ", res_data);
+        
         return res.status(200).json({
             "code": 200,
-            "message": "ok"
+            "message": "update correct_cnt success"
         });  
+
     } catch (error) {
         console.error(error);  
         res.status(500).json({
@@ -71,7 +67,7 @@ router.patch('/:username', async (req, res, next) => {
     }
 });
 
-/** update user "correct_cnt" */
+/** spread rank up to 10 in users */
 router.get('/rank', async (req, res, next) => {            
     try {           
         var connection = await mysql.createConnection(conn.real); // DB 커넥션 생성

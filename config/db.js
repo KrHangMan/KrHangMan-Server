@@ -20,7 +20,7 @@ real = {
     port: env.DB_PORT,
     user: env.DB_USER,
     password: env.DB_PASSWORD,
-    database: 'Hangman'
+    database: 'Hangman',
 }
 
 module.exports = { local, dev, real };
