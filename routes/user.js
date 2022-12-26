@@ -38,8 +38,8 @@ router.patch('/:username', async (req, res, next) => {
         const username      = req.params.username;
         const correct_cnt   = req.body.correct_cnt;
 
-        console.log("username : ", username , " | correct_cnt : " , correct_cnt);
-
+        console.log("body :" , req.body, "username : ", username , " | correct_cnt : " , correct_cnt);
+        
         var query =  `UPDATE USERS 
                             SET CORRECT_CNT = '${parseInt(correct_cnt)}' + 
                             (SELECT CORRECT_CNT 
@@ -51,7 +51,7 @@ router.patch('/:username', async (req, res, next) => {
                             ) 
                       WHERE USERNAME = '${String(username)}';`;
         
-        console.log("query : ", query);
+         console.log("query : ", query);
 
         connection.query(query, function (err,  fields) { 
             if (err) {
