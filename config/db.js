@@ -21,7 +21,6 @@ real = {
     user: env.DB_USER,
     password: env.DB_PASSWORD,
     database: 'Hangman',
-    connectionLimit : 10
 }
 
 module.exports = { local, dev, real };

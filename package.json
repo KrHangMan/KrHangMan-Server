@@ -5,7 +5,6 @@
   "main": "server.js",
   "scripts": {
     "start": "nodemon server"
-  
   },
   "dependencies": {
     "body-parser": "^1.20.1",
