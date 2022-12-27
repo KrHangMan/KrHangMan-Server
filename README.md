@@ -21,7 +21,7 @@
 ### WORD 
 | HTTP Method | URI | Operation |
 | --- | --- | --- |
-| GET | /api/words | spread 10 words : 자모자 형식으로 |
+| GET | /api/words | spread 10 words : 10개 단어 보내줌 |
 
 ## <a href="#">ERD 설계</a>
 
