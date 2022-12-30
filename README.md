@@ -14,14 +14,14 @@
 ### USERS
 | HTTP Method | URI | Operation |
 | --- | --- | --- |
-| POST | /api/users | create a new user : 처음 등록할시에 동작 추후 앱 스토리지에 저장 |
+| POST | /api/users | create a new user  |
 | PATCH | /api/users/:username | update user "correct_cnt" |  
 | GET | /api/users/rank| spread rank up to 10 in users |
 
 ### WORD 
 | HTTP Method | URI | Operation |
 | --- | --- | --- |
-| GET | /api/words | spread 10 words : 자모자 형식으로 |
+| GET | /api/words | spread 10 words : 10개 단어 보내줌 |
 
 ## <a href="#">ERD 설계</a>
 
