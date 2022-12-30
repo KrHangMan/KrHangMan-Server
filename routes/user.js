@@ -2,20 +2,16 @@ const express = require('express');
 const router = express.Router();
 const conn = require('../config/db.js');
 const mysql = require('mysql2/promise');
-//const { connectDB } = require("./middleware-db");
+
 
 /** create a new user  */
 router.post('/', async (req, res, next) => {            
     try {           
-        var connection = mysql.createConnection(conn.real); // DB 커넥션 생성
-        connection.connect();
+        var connection = await mysql.createConnection(conn.real); // DB 커넥션 생성
+        await connection.connect();
         const get_user = req.body.username;
         const new_user = `insert into USERS(username, correct_cnt) values ('${String(get_user)}', 0); `
-        connection.query(new_user, function (err,  fields) { 
-            if (err) {
-                console.log(err);
-            } 
-        });
+        await connection.query(new_user);
         return res.status(200).json({
             "code": 200,
             "message": "ok"
@@ -68,9 +64,9 @@ router.patch('/:username', async (req, res, next) => {
 });
 
 /** spread rank up to 10 in users */
-router.get('/rank', async (req, res, next) => {            
+router.get('/rank',  async (req, res, next) => {            
     try {           
-        var connection = await mysql.createConnection(conn.real); // DB 커넥션 생성
+        const connection = await mysql.createConnection(conn.real); // DB 커넥션 생성
         await connection.connect();   // DB 접속
         const rank_query = `select username, correct_cnt from USERS order by correct_cnt desc limit 10;   `
         const rank_data =   await connection.query(rank_query);
