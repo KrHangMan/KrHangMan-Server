@@ -9,8 +9,5 @@ RUN npm install
 # 나머지 코드들 작업 디렉토리에 복사
 COPY ./ ./
 
-
-
-ENV CHOKIDAR_USEPOLLING=true
 # 컨테이너가 올라가면 서버 기동
 CMD ["npm", "start"]
