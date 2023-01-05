@@ -12,7 +12,7 @@ router.get('/', async (req, res, next) => {
 
         const username      = req.params.username;
         const correct_cnt   = req.body.correct_cnt;
-        const query         = `SELECT WORD, MEAN FROM WORDS ORDER BY RAND() LIMIT 3;`; //갯수 임의로 지정 할 수 있도록? 
+        const query         = `SELECT WORD, MEAN FROM WORDS ORDER BY RAND() LIMIT 10;`; 
         const res_data      = await connection.query(query);
 
         if(res_data == null || undefined){
@@ -22,7 +22,7 @@ router.get('/', async (req, res, next) => {
             });
         }
 
-        let arr = new Array() ;
+        let word_list = new Array() ;
         for(let i in res_data[0]){
             let data = new Object() ;
 			
@@ -30,14 +30,11 @@ router.get('/', async (req, res, next) => {
 			data.MEAN = res_data[0][i].MEAN;
             data.SPELL = Hangul.disassemble(res_data[0][i].WORD); 
 
-            arr.push(data);
+            word_list.push(data);
         }
-        let items = JSON.stringify(arr) ;
-        console.log(items);
-
-        // res_data 
+        // console.log(arr);
         return res.status(200).json({
-            items,
+            word_list,
             "code": 200,
             "message": "spread 10 words success"
         });   
@@ -48,35 +45,6 @@ router.get('/', async (req, res, next) => {
             "message": "server error"
         });
     }
-
-    /*
-        ## request X
-        ### 단어 10개 주는 방식 
-        랜덤하게  10개를 보낸다 -> 중복 데이터 무시 
-        ## Response
-        {
-             "items" : {
-                {
-                    "spell" : [ㄱ,ㅏ,ㄴ,ㄷ,ㅏ],
-                    "word"  : "간다",
-                    "mean"  : "간다는뜻"
-                },
-                {
-                    "spell" : [ㄱ,ㅏ,ㄴ,ㄷ,ㅏ],
-                    "word"  : "간다",
-                    "mean"  : "간다는뜻"
-                },
-                ...
-                {
-                    "spell" : [ㄱ,ㅏ,ㄴ,ㄷ,ㅏ],
-                    "word"  : "간다",
-                    "mean"  : "간다는뜻"
-                },
-             }
-                
-        }
-
-    */
 });
 
 
