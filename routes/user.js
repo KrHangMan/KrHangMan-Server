@@ -8,17 +8,14 @@ router.post('/', async (req, res, next) => {
     const connection = await mysql.createConnection(conn.real); // DB 커넥션 생성
     await connection.connect();         
     try {  
-        await connection.beginTransaction();
         const get_user = req.body.username;
         const new_user = `insert into USERS(username, correct_cnt) values ('${String(get_user)}', 0); `
         await connection.query(new_user);
-        await connection.commit();
         return res.status(200).json({
             "code": 200,
             "message": "ok"
         });
     } catch (error) {
-        await connection.rollback();
         console.error(error);  
         res.status(500).json({
         "code":500,
@@ -35,8 +32,6 @@ router.patch('/:username', async (req, res, next) => {
     const connection = await mysql.createConnection(conn.real); // DB 커넥션 생성
     await connection.connect();   // DB 접속         
     try {           
-        await connection.beginTransaction();  //트랜잭션 시작
-
         const username      = req.params.username;
         const correct_cnt   = req.body.correct_cnt;
         const query =  `UPDATE USERS 
@@ -53,7 +48,6 @@ router.patch('/:username', async (req, res, next) => {
         console.log("query : ", query);
 
         const res_data =  await connection.query(query);
-        await connection.commit(); //커밋
         console.log("res_data : ", res_data);
         
         return res.status(200).json({
@@ -78,10 +72,8 @@ router.get('/rank',  async (req, res, next) => {
     const connection = await mysql.createConnection(conn.real); // DB 커넥션 생성
     await connection.connect();   // DB 접속        
     try {           
-        await connection.beginTransaction();  //트랜잭션 시작
         const rank_query = `select username, correct_cnt from USERS order by correct_cnt desc limit 10;   `
         const rank_data =   await connection.query(rank_query);
-        await connection.commit(); //커밋
         if(rank_data == null || undefined){
             return res.status(404).json({
                 rank_data,
@@ -100,7 +92,6 @@ router.get('/rank',  async (req, res, next) => {
             "message": "ok"
         });  
     } catch (error) {
-        await connection.rollback();
         console.error(error);  
         return res.status(500).json({
         "code":500,
