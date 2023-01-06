@@ -9,12 +9,25 @@ router.post('/', async (req, res, next) => {
     await connection.connect();         
     try {  
         const get_user = req.body.username;
+        const user_sign = `select * from USERS where username = '${String(get_user)}'; `
+        const result = await connection.query(user_sign);
+
+        if(result[0][0] !== undefined || null){
+            console.log(1);
+            return res.status(203).json({
+                code: 203,
+                message: "username already exists"
+            });
+        }
+        
         const new_user = `INSERT INTO USERS(username, correct_cnt) VALUES ('${String(get_user)}', 0); `
         await connection.query(new_user);
-        return res.status(200).json({
-            "code": 200,
-            "message": "ok"
+        return res.status(202).json({
+            code: 202,
+            message: "username enroll"
         });
+        
+        
     } catch (error) {
         console.error(error);  
         res.status(500).json({
@@ -75,7 +88,7 @@ router.get('/rank',  async (req, res, next) => {
         const rank_query = `SELECT 
                                 username, 
                                 correct_cnt, 
-                                ROW_NUMBER() OVER (ORDER BY correct_cnt DESC, username ASC) AS ranking
+                                ROW_NUMBER() OVER (ORDER BY correct_cnt DESC, username ASC) AS rank
                             FROM USERS 
                             LIMIT 10;`;
 
