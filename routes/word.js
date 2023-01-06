@@ -26,9 +26,9 @@ router.get('/', async (req, res, next) => {
         for(let i in res_data[0]){
             let data = new Object() ;
 			
-			data.WORD = res_data[0][i].WORD;
-			data.MEAN = res_data[0][i].MEAN;
-            data.SPELL = Hangul.disassemble(res_data[0][i].WORD); 
+			data.word = res_data[0][i].WORD;
+			data.mean = res_data[0][i].MEAN;
+            data.spell = Hangul.disassemble(res_data[0][i].WORD); 
 
             word_list.push(data);
         }
