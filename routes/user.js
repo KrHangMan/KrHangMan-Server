@@ -102,24 +102,44 @@ router.get('/rank',  async (req, res, next) => {
      }
 });
 
+/** response userrank */
+router.get('/rank/:username', async (req, res, next) => {            
+    try {           
+        var connection = await mysql.createConnection(conn.real); // DB 커넥션 생성
+        await connection.connect();   // DB 접속
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+        const username   = req.params.username;
+        const rank_query = `SELECT 
+                                E.username,
+                                E.ranking
+                            FROM 
+                                (SELECT 
+                                    username, 
+                                    RANK() OVER (ORDER BY correct_cnt DESC) AS ranking
+                                    FROM USERS 
+                                ) E
+                            WHERE 1=1
+                                  AND USERNAME = '${String(username)}'`;
+        const rank_data  =   await connection.query(rank_query);
+        if(rank_data == null || undefined){
+            return res.status(404).json({
+                "code": 404,
+                "message": "Not found user ranking"
+            });
+        }
+        return res.status(200).json({
+            "username" :rank_data[0][0].username,
+            "ranking": rank_data[0][0].ranking,
+            "code": 200,
+            "message": "ok"
+        });  
+    } catch (error) {
+        console.error(error);  
+        return res.status(500).json({
+        "code":500,
+        "message": "server error"
+        });
+    }
+});
 
 module.exports = router;
