@@ -17,6 +17,7 @@
 | POST | /api/users | create a new user  |
 | PATCH | /api/users/:username | update user "correct_cnt" |  
 | GET | /api/users/rank| spread rank up to 10 in users |
+| GET | /api/users/rank/:username | response user rank |
 
 ### WORD 
 | HTTP Method | URI | Operation |
