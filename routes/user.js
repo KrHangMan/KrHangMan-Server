@@ -13,7 +13,6 @@ router.post('/', async (req, res, next) => {
         const result = await connection.query(user_sign);
 
         if(result[0][0] !== undefined || null){
-            console.log(1);
             return res.status(203).json({
                 code: 203,
                 message: "username already exists"
@@ -69,7 +68,6 @@ router.patch('/:username', async (req, res, next) => {
         });  
 
     } catch (error) {
-        await connection.rollback();
         console.error(error);  
         res.status(500).json({
             "code":500,
@@ -88,14 +86,13 @@ router.get('/rank',  async (req, res, next) => {
         const rank_query = `SELECT 
                                 username, 
                                 correct_cnt, 
-                                ROW_NUMBER() OVER (ORDER BY correct_cnt DESC, username ASC) AS rank
+                                ROW_NUMBER() OVER (ORDER BY correct_cnt DESC, username ASC) AS 'rank'
                             FROM USERS 
-                            LIMIT 10;`;
+                            LIMIT 10; `;
 
         const rank_data =   await connection.query(rank_query);
         if(rank_data == null || undefined){
             return res.status(404).json({
-                rank_data,
                 "code": 404,
                 "message": "Not found Rank"
             });
@@ -134,16 +131,16 @@ router.get('/rank/:username', async (req, res, next) => {
                                     FROM USERS 
                                 ) E
                             WHERE 1=1
-                                  AND USERNAME = '${String(username)}'`;
+                                  AND USERNAME = '${String(username)}'; `;
         const rank_data  =   await connection.query(rank_query);
-        if(rank_data[0] == null || undefined || "[]"){
+        if(rank_data[0] == null || undefined){
             return res.status(404).json({
                 "code": 404,
                 "message": "Not found user ranking"
             });
         }
         const res_username = rank_data[0][0].username;
-        const res_ranking = rank_data[0][0].username;
+        const res_ranking = rank_data[0][0].ranking;
         return res.status(200).json({
             "username" :res_username,
             "ranking": res_ranking,
