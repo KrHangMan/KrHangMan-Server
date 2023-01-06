@@ -9,7 +9,7 @@ router.post('/', async (req, res, next) => {
     await connection.connect();         
     try {  
         const get_user = req.body.username;
-        const new_user = `insert into USERS(username, correct_cnt) values ('${String(get_user)}', 0); `
+        const new_user = `INSERT INTO USERS(username, correct_cnt) VALUES ('${String(get_user)}', 0); `
         await connection.query(new_user);
         return res.status(200).json({
             "code": 200,
@@ -72,19 +72,21 @@ router.get('/rank',  async (req, res, next) => {
     const connection = await mysql.createConnection(conn.real); // DB 커넥션 생성
     await connection.connect();   // DB 접속        
     try {           
-        const rank_query = `select username, correct_cnt from USERS order by correct_cnt desc limit 10;   `
+        const rank_query = `SELECT 
+                                username, 
+                                correct_cnt, 
+                                ROW_NUMBER() OVER (ORDER BY correct_cnt DESC, username ASC) AS ranking
+                            FROM USERS 
+                            LIMIT 10;`;
+
         const rank_data =   await connection.query(rank_query);
         if(rank_data == null || undefined){
             return res.status(404).json({
                 rank_data,
                 "code": 404,
                 "message": "Not found Rank"
-        });
+            });
         }
-       for(var i =0; i<rank_data[0].length;i++){
-         rank_data[0][i].Rank = i+1;
-       }
-       console.log(rank_data[0]);
        const add_rank = rank_data[0];
         return res.status(200).json({
             add_rank,
@@ -115,21 +117,23 @@ router.get('/rank/:username', async (req, res, next) => {
                             FROM 
                                 (SELECT 
                                     username, 
-                                    RANK() OVER (ORDER BY correct_cnt DESC) AS ranking
+                                    ROW_NUMBER() OVER (ORDER BY correct_cnt DESC, username ASC) AS ranking
                                     FROM USERS 
                                 ) E
                             WHERE 1=1
                                   AND USERNAME = '${String(username)}'`;
         const rank_data  =   await connection.query(rank_query);
-        if(rank_data == null || undefined){
+        if(rank_data[0] == null || undefined || "[]"){
             return res.status(404).json({
                 "code": 404,
                 "message": "Not found user ranking"
             });
         }
+        const res_username = rank_data[0][0].username;
+        const res_ranking = rank_data[0][0].username;
         return res.status(200).json({
-            "username" :rank_data[0][0].username,
-            "ranking": rank_data[0][0].ranking,
+            "username" :res_username,
+            "ranking": res_ranking,
             "code": 200,
             "message": "ok"
         });  
