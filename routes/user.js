@@ -32,24 +32,13 @@ router.patch('/:username', async (req, res, next) => {
     const connection = await mysql.createConnection(conn.real); // DB 커넥션 생성
     await connection.connect();   // DB 접속         
     try {           
-        const username      = req.params.username;
+        const username    = req.params.username;
         const correct_cnt   = req.body.correct_cnt;
-        const query =  `UPDATE USERS 
-                            SET CORRECT_CNT = '${parseInt(correct_cnt)}' + 
-                            (SELECT CORRECT_CNT 
-                            FROM (
-                                    SELECT CORRECT_CNT 
-                                    FROM USERS 
-                                    WHERE USERNAME = '${String(username)}'
-                                ) TMP
-                            ) 
-                        WHERE USERNAME = '${String(username)}';`;
-        
-        console.log("query : ", query);
+        const query =  `UPDATE USERS  SET CORRECT_CNT = '${parseInt(correct_cnt)}' 
+                        WHERE USERNAME = '${String(username)}';`
 
         const res_data =  await connection.query(query);
-        console.log("res_data : ", res_data);
-        
+        connection.commit();
         return res.status(200).json({
             "code": 200,
             "message": "update correct_cnt success"
