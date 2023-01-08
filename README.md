@@ -24,5 +24,6 @@
 | --- | --- | --- |
 | GET | /api/words | spread 10 words : 10개 단어 보내줌 |
 
-## <a href="#">ERD 설계</a>
+## ERD 설계
+![image](https://user-images.githubusercontent.com/55049159/211178083-3d4f85fb-9db0-4e19-90c8-1a458ec61724.png)
 
