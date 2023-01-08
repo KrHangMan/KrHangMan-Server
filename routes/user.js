@@ -110,16 +110,16 @@ router.get('/rank/:username', async (req, res, next) => {
                                     FROM USERS 
                                 ) E
                             WHERE 1=1
-                                  AND USERNAME = '${String(username)}'`;
+                                  AND USERNAME = '${String(username)}'; `;
         const rank_data  =   await connection.query(rank_query);
-        if(rank_data[0] == null || undefined || "[]"){
+        if(rank_data[0] == null || undefined){
             return res.status(404).json({
                 "code": 404,
                 "message": "Not found user ranking"
             });
         }
         const res_username = rank_data[0][0].username;
-        const res_ranking = rank_data[0][0].username;
+        const res_ranking = rank_data[0][0].ranking;
         return res.status(200).json({
             "username" :res_username,
             "ranking": res_ranking,
@@ -132,6 +132,8 @@ router.get('/rank/:username', async (req, res, next) => {
         "code":500,
         "message": "server error"
         });
+    } finally {
+        connection.end();  
     }
 });
 

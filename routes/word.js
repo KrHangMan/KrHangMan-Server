@@ -44,6 +44,8 @@ router.get('/', async (req, res, next) => {
             "code":500,
             "message": "server error"
         });
+    } finally{
+        connection.end();  
     }
 });
 
