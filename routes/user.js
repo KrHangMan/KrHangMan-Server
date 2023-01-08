@@ -28,6 +28,8 @@ router.post('/', async (req, res, next) => {
             code: 202,
             message: "username enroll"
         });
+        
+        
     } catch (error) {
         logger.error(error);
         res.status(500).json({
@@ -59,7 +61,6 @@ router.patch('/:username', async (req, res, next) => {
         });  
 
     } catch (error) {
-        await connection.rollback();
         logger.error( error);
         res.status(500).json({
             "code":500,
@@ -78,14 +79,13 @@ router.get('/rank',  async (req, res, next) => {
         const rank_query = `SELECT 
                                 username, 
                                 correct_cnt, 
-                                ROW_NUMBER() OVER (ORDER BY correct_cnt DESC, username ASC) AS ranking
+                                ROW_NUMBER() OVER (ORDER BY correct_cnt DESC, username ASC) AS 'rank'
                             FROM USERS 
-                            LIMIT 10;`;
+                            LIMIT 10; `;
 
         const rank_data =   await connection.query(rank_query);
         if(rank_data == null || undefined){
             return res.status(404).json({
-                rank_data,
                 "code": 404,
                 "message": "Not found Rank"
             });
