@@ -1,5 +1,3 @@
-# KrHangMan-Server
-
 ## 개발 환경(Development Environment)
 | 분류 | 개발환경 | 
 |---|---|
