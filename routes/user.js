@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const conn = require('../config/db.js');
 const mysql = require('mysql2/promise');
+const logger = require('../config/logger.js');
 
 /** create a new user  */
 router.post('/', async (req, res, next) => {    
@@ -9,14 +10,26 @@ router.post('/', async (req, res, next) => {
     await connection.connect();         
     try {  
         const get_user = req.body.username;
+        const user_sign = `select * from USERS where username = '${String(get_user)}'; `
+        const result = await connection.query(user_sign);
+
+        if(result[0][0] !== undefined || null){
+            logger.error("create a new user : username already exists");
+            return res.status(203).json({
+                code: 203,
+                message: "username already exists"
+            });
+        }
+        
         const new_user = `INSERT INTO USERS(username, correct_cnt) VALUES ('${String(get_user)}', 0); `
         await connection.query(new_user);
-        return res.status(200).json({
-            "code": 200,
-            "message": "ok"
+        logger.info("Insert User :" + "username [" + get_user +"]");
+        return res.status(202).json({
+            code: 202,
+            message: "username enroll"
         });
     } catch (error) {
-        console.error(error);  
+        logger.error(error);
         res.status(500).json({
         "code":500,
         "message": "server error"
@@ -39,6 +52,7 @@ router.patch('/:username', async (req, res, next) => {
 
         const res_data =  await connection.query(query);
         connection.commit();
+        logger.info("update correct_cnt success | username : ["+ username + "]" + "correct_cnt : ["+ correct_cnt +"]");
         return res.status(200).json({
             "code": 200,
             "message": "update correct_cnt success"
@@ -46,7 +60,7 @@ router.patch('/:username', async (req, res, next) => {
 
     } catch (error) {
         await connection.rollback();
-        console.error(error);  
+        logger.error( error);
         res.status(500).json({
             "code":500,
             "message": "server error"
@@ -76,14 +90,14 @@ router.get('/rank',  async (req, res, next) => {
                 "message": "Not found Rank"
             });
         }
-       const add_rank = rank_data[0];
+        const add_rank = rank_data[0];
         return res.status(200).json({
             add_rank,
             "code": 200,
             "message": "ok"
         });  
     } catch (error) {
-        console.error(error);  
+        logger.error(error);
         return res.status(500).json({
         "code":500,
         "message": "server error"
@@ -111,7 +125,7 @@ router.get('/rank/:username', async (req, res, next) => {
                                 ) E
                             WHERE 1=1
                                   AND USERNAME = '${String(username)}'; `;
-        const rank_data  =   await connection.query(rank_query);
+        const rank_data = await connection.query(rank_query);
         if(rank_data[0] == null || undefined){
             return res.status(404).json({
                 "code": 404,
@@ -120,6 +134,9 @@ router.get('/rank/:username', async (req, res, next) => {
         }
         const res_username = rank_data[0][0].username;
         const res_ranking = rank_data[0][0].ranking;
+
+        logger.info("response userrank | username : ["+ res_username + "]" + "ranking : ["+ res_ranking +"]");
+        
         return res.status(200).json({
             "username" :res_username,
             "ranking": res_ranking,
@@ -127,7 +144,7 @@ router.get('/rank/:username', async (req, res, next) => {
             "message": "ok"
         });  
     } catch (error) {
-        console.error(error);  
+        logger.error( error);
         return res.status(500).json({
         "code":500,
         "message": "server error"

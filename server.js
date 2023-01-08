@@ -3,6 +3,8 @@ const app = express();
 const dotenv = require('dotenv');
 dotenv.config();
 const bodyParser = require('body-parser');
+const winston = require('winston');
+const winstonDaily = require('winston-daily-rotate-file');
 const morgan = require('morgan');
 const Hangul = require('hangul-js');    // 한글 자모자 분리 library
 const mysql = require('mysql2');
@@ -13,30 +15,19 @@ app.set('port', process.env.DEV_PORT || 3000);
 app.use(express.json());
 app.use(bodyParser.urlencoded({extended : true}));
 app.use(morgan('combined'));
-
 app.use('/api/users', users);
 app.use('/api/words', words);
+const logger = require('./config/logger.js');
+
 app.use((req, res, next) => {
     const error =  new Error(`${req.method} ${req.url} 라우터가 없습니다.`);
+    logger.error(error);
     error.status = 404;
     next(error);
-  });
+});
 
 app.listen(process.env.DEV_PORT , () => {  
-    console.log('listening on ', process.env.DEV_PORT);
-    
-    //연결 테스트 
-    var connection = mysql.createConnection(conn.real); // DB 커넥션 생성
-    connection.connect();   // DB 접속
-    
-    testQuery = "SELECT COUNT(*) AS 단어갯수 FROM WORDS";
-    connection.query(testQuery, function (err, results, fields) { // testQuery 실행
-        console.log(JSON.stringify(results));
-        if (err) {
-            console.log(err);
-        }
-    });
-    connection.end(); // DB 접속 종료
+    logger.info('listening on ', process.env.DEV_PORT);
 });
 
 
