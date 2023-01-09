@@ -6,15 +6,17 @@ const bodyParser = require('body-parser');
 const winston = require('winston');
 const winstonDaily = require('winston-daily-rotate-file');
 const morgan = require('morgan');
-const Hangul = require('hangul-js');    // 한글 자모자 분리 library
-const mysql = require('mysql2');
-const conn = require('./config/db.js');
+const helmet = require('helmet');
+const hpp = require('hpp');
+
 const users = require('./routes/user');
 const words = require('./routes/word');
 app.set('port', process.env.DEV_PORT || 3000);
 app.use(express.json());
 app.use(bodyParser.urlencoded({extended : true}));
 app.use(morgan('combined'));
+app.use(helmet({ contentSecurityPolicy: false}));
+app.use(hpp());
 app.use('/api/users', users);
 app.use('/api/words', words);
 const logger = require('./config/logger.js');

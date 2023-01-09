@@ -6,6 +6,7 @@ COPY package.json ./
 COPY .env ./
 # 모듈 설치
 RUN npm install
+RUN npm install pm2 -g
 # 나머지 코드들 작업 디렉토리에 복사
 COPY ./ ./
 
