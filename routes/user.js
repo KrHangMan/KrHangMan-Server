@@ -49,7 +49,10 @@ router.patch('/:username', async (req, res, next) => {
     try {           
         const username    = req.params.username;
         const correct_cnt   = req.body.correct_cnt;
-        const query =  `UPDATE USERS  SET CORRECT_CNT = '${parseInt(correct_cnt)}' 
+        const query =  `UPDATE USERS 
+                            SET 
+                            correct_cnt = '${parseInt(correct_cnt)}', 
+                            changed_dt = NOW() 
                         WHERE USERNAME = '${String(username)}';`
 
         const res_data =  await connection.query(query);
