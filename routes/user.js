@@ -78,7 +78,7 @@ router.get('/rank',  async (req, res, next) => {
         const rank_query = `SELECT 
                                 username, 
                                 correct_cnt, 
-                                ROW_NUMBER() OVER (ORDER BY correct_cnt DESC, username ASC) AS ranking
+                                ROW_NUMBER() OVER (ORDER BY correct_cnt DESC, created_dt ASC) AS ranking
                             FROM USERS 
                             LIMIT 10;`;
 
