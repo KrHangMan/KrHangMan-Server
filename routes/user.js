@@ -115,7 +115,12 @@ router.get('/rank/:username', async (req, res, next) => {
     try {           
         var connection = await mysql.createConnection(conn.real); // DB 커넥션 생성
         await connection.connect();   // DB 접속
-
+    //     `SELECT 
+    //     username, 
+    //     correct_cnt, 
+    //     ROW_NUMBER() OVER (ORDER BY correct_cnt DESC, created_dt ASC) AS ranking
+    // FROM USERS 
+    // LIMIT 10; `
         const username   = req.params.username;
         const rank_query = `SELECT 
                                 E.username,
@@ -123,7 +128,7 @@ router.get('/rank/:username', async (req, res, next) => {
                             FROM 
                                 (SELECT 
                                     username, 
-                                    ROW_NUMBER() OVER (ORDER BY correct_cnt DESC, username ASC) AS ranking
+                                    ROW_NUMBER() OVER (ORDER BY correct_cnt DESC, created_dt ASC) AS ranking
                                     FROM USERS 
                                 ) E
                             WHERE 1=1
