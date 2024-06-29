@@ -25,3 +25,32 @@
 ## ERD 설계
 ![image](https://user-images.githubusercontent.com/55049159/211178083-3d4f85fb-9db0-4e19-90c8-1a458ec61724.png)
 
+## DDL
+<details>
+<summary>SQL Table Creation Code</summary>
+
+```sql
+CREATE TABLE USERS (
+  username VARCHAR(100) NOT NULL,
+  correct_cnt BIGINT NOT NULL,
+  use_yn TINYINT(1) NOT NULL DEFAULT 1,
+  PRIMARY KEY (username)
+)
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8;
+
+CREATE TABLE WORDS(
+    word varchar(10) Primary Key,	
+    mean varchar(255)  NULL,	    
+    key idx_name(word)	
+)
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8;
+```
+</details>
+
+
+
+
+## System Architecture
+![hangman architecture drawio](https://github.com/KrHangMan/KrHangMan-Server/assets/106163272/144c32ac-3994-4cf5-82e4-6d322ab953f3)
