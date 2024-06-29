@@ -50,7 +50,9 @@ DEFAULT CHARACTER SET = utf8;
 </details>
 
 
-
-
 ## System Architecture
 ![hangman architecture drawio](https://github.com/KrHangMan/KrHangMan-Server/assets/106163272/144c32ac-3994-4cf5-82e4-6d322ab953f3)
+
+## CI/CD
+![hangmancicd drawio](https://github.com/KrHangMan/KrHangMan-Server/assets/106163272/e13c150e-d7a9-4f1d-85e9-7007bba7fb7c)
+
